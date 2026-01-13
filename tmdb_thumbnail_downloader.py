@@ -87,26 +87,30 @@ def main():
                 still_path = episode["still_path"]
 
                 if still_path:
-                    filename = f"S{season_num:02d}E{episode_num:02d}_{episode_name}.jpg"
-                    # Remove invalid filename characters
-                    filename = "".join(
-                        c for c in filename if c.isalnum() or c in (" ", "_", "-", ".")
+                    # Get file extension from the still_path
+                    ext = os.path.splitext(still_path)[1] or ".jpg"
+                    # Clean episode name - remove invalid filename characters
+                    clean_name = "".join(
+                        c for c in episode_name if c.isalnum() or c in (" ", "_", "-")
                     ).rstrip()
+                    filename = (
+                        f"s{season_num:02d}e{episode_num:02d} {clean_name}-thumb{ext}"
+                    )
                     save_path = os.path.join(season_dir, filename)
 
                     try:
                         download_image(still_path, save_path)
                         print(
-                            f"  ✓ Downloaded: S{season_num:02d}E{episode_num:02d} - {episode_name}"
+                            f"  ✓ Downloaded: s{season_num:02d}e{episode_num:02d} - {episode_name}"
                         )
                         total_downloaded += 1
                     except Exception as e:
                         print(
-                            f"  ✗ Failed to download S{season_num:02d}E{episode_num:02d}: {e}"
+                            f"  ✗ Failed to download s{season_num:02d}e{episode_num:02d}: {e}"
                         )
                 else:
                     print(
-                        f"  - No thumbnail for S{season_num:02d}E{episode_num:02d} - {episode_name}"
+                        f"  - No thumbnail for s{season_num:02d}e{episode_num:02d} - {episode_name}"
                     )
                     total_skipped += 1
 

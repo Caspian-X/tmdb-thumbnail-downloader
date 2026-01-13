@@ -1,3 +1,7 @@
+# lists available commands
+default:
+    @just --list --unsorted
+
 # Setup environment file if it doesn't exist
 setup-env:
     @test -f .env || (cp .env.example .env && echo "Created .env file. Please edit it with your API key.")

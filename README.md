@@ -6,18 +6,18 @@
 
 1. Copy the example environment file and add your API key:
 
-```bash
-# Copy the example file
-cp .env.example .env
+    ```bash
+    # Copy the example file
+    cp .env.example .env
 
-# Then edit .env and add your TMDB API key
-```
+    # Then edit .env and add your TMDB API key
+    ```
 
 2. Install dependencies and create virtual environment:
 
-```bash
-uv sync
-```
+    ```bash
+    uv sync
+    ```
 
 Or use just to do both steps automatically:
 
