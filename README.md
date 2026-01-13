@@ -2,7 +2,7 @@
 
 Made possible by [The Movie DB](https://www.themoviedb.org/)
 <div align="">
-  <img src="assets/tmdb-logo.svg" alt="TMDB Logo" width="200">
+  <img src="assets/tmdb-logo-long.svg" alt="TMDB Logo" width="800">
 </div>
 
 ## Quick Start
