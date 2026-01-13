@@ -1,5 +1,10 @@
 # TMDB Thumbnail Downloader
 
+Made possible by [The Movie DB](https://www.themoviedb.org/)
+<div align="">
+  <img src="assets/tmdb-logo.svg" alt="TMDB Logo" width="200">
+</div>
+
 ## Quick Start
 
 ### First Time Setup
