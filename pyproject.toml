@@ -1,0 +1,10 @@
+[project]
+name = "tmdb-thumbnail-downloader"
+version = "1.0.0"
+description = "Downloads thumbnails for movies and tv shows from The Movie Database (TMDB)"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "python-dotenv>=1.2.1",
+    "requests>=2.32.5",
+]
