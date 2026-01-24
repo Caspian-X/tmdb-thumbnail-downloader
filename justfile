@@ -11,6 +11,10 @@ setup-env:
 init: setup-env
     uv sync
 
-# Run the main script
-start:
+# Download thumbnails from tmdb for the given show id
+run-tmdb:
     uv run python tmdb_thumbnail_downloader.py
+
+# Download thumbnails from thetvdb for the given show id
+run-thetvdb:
+    uv run python thetvdb_thumbnail_downloader.py

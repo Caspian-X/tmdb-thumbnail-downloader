@@ -12,5 +12,6 @@ wheels/
 # Environment variables
 .env
 
-# Output directory
-thumbnails
+# Output directories
+tmdb_thumbnails
+thetvdb_thumbnails
