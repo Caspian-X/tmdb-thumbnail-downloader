@@ -1,3 +1,4 @@
+import re
 import requests
 import os
 from pathlib import Path
@@ -77,7 +78,7 @@ def main():
             episodes = season_data["episodes"]
 
             # Create season directory
-            season_dir = os.path.join(OUTPUT_DIR, f"Season_{season_num:02d}")
+            season_dir = os.path.join(OUTPUT_DIR, f"Season {season_num:02d}")
             Path(season_dir).mkdir(parents=True, exist_ok=True)
 
             # Download each episode thumbnail
@@ -90,9 +91,15 @@ def main():
                     # Get file extension from the still_path
                     ext = os.path.splitext(still_path)[1] or ".jpg"
                     # Clean episode name - remove invalid filename characters
-                    clean_name = "".join(
-                        c for c in episode_name if c.isalnum() or c in (" ", "_", "-")
-                    ).rstrip()
+                    clean_name = re.sub(
+                        r"  +",
+                        " ",
+                        "".join(
+                            c
+                            for c in episode_name
+                            if c.isalnum() or c in (" ", "_", "-")
+                        ).rstrip(),
+                    )
                     filename = (
                         f"s{season_num:02d}e{episode_num:02d} {clean_name}-thumb{ext}"
                     )
