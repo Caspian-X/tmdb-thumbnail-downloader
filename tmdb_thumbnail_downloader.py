@@ -40,6 +40,30 @@ def get_season_episodes(show_id, season_number):
     return response.json()
 
 
+def sanitize_filename(name):
+    """Sanitize filename by removing/ replacing invalid characters."""
+    # Invalid characters: <>:"/\|?*@#$%^&~;+=
+    # : -> -
+    # !?#$% -> _
+    # & -> and
+    # rest (< > " / \ | * @ ^ ~ ; + =) -> space
+
+    result = []
+    for char in name:
+        if char == ":":
+            result.append("-")
+        elif char in "!?#$%":
+            result.append("_")
+        elif char == "&":
+            result.append("and")
+        elif char in '<>"/\\|*@^~;+=':
+            result.append(" ")
+        else:
+            result.append(char)
+
+    return "".join(result).rstrip()
+
+
 def download_image(image_path, save_path):
     """Download an image from TMDB."""
     if not image_path:
@@ -90,25 +114,24 @@ def main():
                 if still_path:
                     # Get file extension from the still_path
                     ext = os.path.splitext(still_path)[1] or ".jpg"
-                    # Clean episode name - remove invalid filename characters
+                    # Clean episode name - apply sanitization rules
                     clean_name = re.sub(
                         r"  +",
                         " ",
-                        "".join(
-                            c
-                            for c in episode_name
-                            if c.isalnum() or c in (" ", "_", "-")
-                        ).rstrip(),
+                        sanitize_filename(episode_name),
                     )
                     filename = (
                         f"s{season_num:02d}e{episode_num:02d} {clean_name}-thumb{ext}"
                     )
                     save_path = os.path.join(season_dir, filename)
 
+                    # Create display name with same sanitization for logging
+                    display_name = re.sub(r"  +", " ", sanitize_filename(episode_name))
+
                     try:
                         download_image(still_path, save_path)
                         print(
-                            f"  ✓ Downloaded: s{season_num:02d}e{episode_num:02d} - {episode_name}"
+                            f"  ✓ Downloaded: s{season_num:02d}e{episode_num:02d} - {display_name}"
                         )
                         total_downloaded += 1
                     except Exception as e:
@@ -116,8 +139,10 @@ def main():
                             f"  ✗ Failed to download s{season_num:02d}e{episode_num:02d}: {e}"
                         )
                 else:
+                    # Create display name with same sanitization for logging
+                    display_name = re.sub(r"  +", " ", sanitize_filename(episode_name))
                     print(
-                        f"  - No thumbnail for s{season_num:02d}e{episode_num:02d} - {episode_name}"
+                        f"  - No thumbnail for s{season_num:02d}e{episode_num:02d} - {display_name}"
                     )
                     total_skipped += 1
 

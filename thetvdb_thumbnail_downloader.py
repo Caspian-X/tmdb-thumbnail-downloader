@@ -50,6 +50,30 @@ def get_series_episodes(token, series_id, season_type="default", page=0):
     return response.json()
 
 
+def sanitize_filename(name):
+    """Sanitize filename by removing/ replacing invalid characters."""
+    # Invalid characters: <>:"/\|?*@#$%^&~;+=
+    # : -> -
+    # !?#$% -> _
+    # & -> and
+    # rest (< > " / \ | * @ ^ ~ ; + =) -> space
+
+    result = []
+    for char in name:
+        if char == ":":
+            result.append("-")
+        elif char in "!?#$%":
+            result.append("_")
+        elif char == "&":
+            result.append("and")
+        elif char in '<>"/\\|*@^~;+=':
+            result.append(" ")
+        else:
+            result.append(char)
+
+    return "".join(result).rstrip()
+
+
 def download_image(image_path, save_path):
     """Download an image from TheTVDB."""
     if not image_path:
@@ -143,19 +167,15 @@ def main():
             if image_path:
                 # Get file extension from the image_path
                 ext = os.path.splitext(image_path)[1] or ".jpg"
-                # Clean episode name - remove invalid filename characters and replace colons
-                clean_name = "".join(
-                    c for c in episode_name if c.isalnum() or c in (" ", "_", "-", ":")
-                ).rstrip()
-                # Replace colons with hyphens
-                clean_name = clean_name.replace(":", "-")
+                # Clean episode name - apply sanitization rules
+                clean_name = sanitize_filename(episode_name)
                 filename = (
                     f"s{season_num:02d}e{episode_num:02d} {clean_name}-thumb{ext}"
                 )
                 save_path = os.path.join(season_dir, filename)
 
-                # Create display name with colons replaced for logging
-                display_name = episode_name.replace(":", "-")
+                # Create display name with same sanitization for logging
+                display_name = sanitize_filename(episode_name)
 
                 try:
                     download_image(image_path, save_path)
@@ -168,8 +188,8 @@ def main():
                         f"  ✗ Failed to download s{season_num:02d}e{episode_num:02d}: {e}"
                     )
             else:
-                # Replace colons in episode name for logging
-                display_name = episode_name.replace(":", "-")
+                # Create display name with same sanitization for logging
+                display_name = sanitize_filename(episode_name)
                 print(
                     f"  - No thumbnail for s{season_num:02d}e{episode_num:02d} - {display_name}"
                 )

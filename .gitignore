@@ -12,6 +12,9 @@ wheels/
 # Environment variables
 .env
 
+# Mac
+.DS_Store
+
 # Output directories
 tmdb_thumbnails
 thetvdb_thumbnails
